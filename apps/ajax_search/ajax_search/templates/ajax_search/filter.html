@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Filter</title>
+</head>
+<body>
+        {% for user in users %}
+            <div id="boxs">
+                {{user.first_name}}
+                {{user.last_name}}
+                {{user.gender}}
+                {{user.sport}}
+            </div>
+        {% endfor %}
+</body>
+</html>

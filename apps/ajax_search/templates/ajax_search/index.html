@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Ajax Search</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <script>
+
+        $(document).ready(function(){
+
+            $('#post_form').submit(function(e){
+                e.preventDefault()
+                $.ajax({
+                    url : $(this).attr('action'),
+                method: 'POST',
+                    data: $(this).serialize(),
+                    success: function(resp){
+                        $("#post_form")[0].reset()
+                    },
+                    error: function(resp){
+                        for(var i = 0; i < resp.responseJSON.errors.length; i++){
+                            $('#error').append('<h5 class="error_message">' + resp.responseJSON.errors[i] + '</h5>') 
+                        }
+                    }
+                })
+            });
+
+            $("#ajax_first_five").keyup(function(){
+                $.ajax({
+                    url: '/ajax_search/get',
+                    method: 'post',
+                    data: $(this).parents("#id_form").serialize(),
+                    success: function(serverResponse){
+                        $("#placeholder").html(serverResponse)
+                    }
+                })
+            });
+
+            $("#user_first_name").keyup(function(){
+                $.ajax({
+                    url: '/ajax_search/filter',
+                    method: 'post',
+                    data: $(this).parent().serialize(),
+                    success: function(serverResponse){
+                        $("#hold_allusers").html(serverResponse)
+                    }
+                })
+            });
+
+            $("#user_gender").change(function(){
+                $.ajax({
+                    url: '/ajax_search/filter',
+                    method: 'post',
+                    data: $(this).parent().serialize(),
+                    success: function(serverResponse){
+                        $("#hold_allusers").html(serverResponse)
+                    }
+                })
+            });
+
+            $("#user_sport").change(function(){
+                $.ajax({
+                    url: '/ajax_search/filter',
+                    method: 'post',
+                    data: $(thid).parent().serialize(),
+                    success: function(serverResponse){
+                        $("#hold_allusers").html(serverResponse)
+                    }
+                })
+            })
+
+        });
+
+    </script>
+
+    <style>
+        h4 {
+            margin: 5px;
+            display: inline-block;
+        }
+        h4#error {
+            display: block;
+        }
+        h5.error_message{
+            color: red;
+            margin: 5px;
+        }
+        input#ajax_first_five {
+            width: 25px;
+        }
+        div#left_hold {
+            display: inline-block;
+            width: 300px;
+            vertical-align: top;
+        }
+        div#hold_allusers {
+            display: inline-block;
+            width: 615px;
+        }
+        div#boxs {
+            width: 150px;
+            height: 150px;
+            display: inline-block;
+            background-color: #dddddd;
+        }
+    </style>
+
+</head>
+<body>
+    <div id="container">
+        <h4 id="error"></h4>
+
+        <h3>Create a new user</h3>
+        <form action="/ajax_search/user" method="post" id="post_form">
+            {% csrf_token %}
+
+            <h4>First Name:</h4>
+            <input type="text" name="first_name"><br>
+
+            <h4>Last Name:</h4>
+            <input type="text" name="last_name"><br>
+
+            <h4>Gender:</h4>
+            <input type="radio" name="gender" value="female"> Female
+            <input type="radio" name="gender" value="male"> Male<br>
+
+            <h4>Image Path:</h4>
+            <input type="text" name="image"><br>
+
+            <h4>Sport</h4>
+            <select name="sport">
+                <option>Baseball</option>
+                <option>Football</option>
+                <option>Soccer</option>
+                <option>Hockey</option>
+            </select>
+
+            <input type="submit" value="Create">
+        </form>
+
+        <form action="/ajax_search/get" method="post" id="id_form">
+            {% csrf_token %}
+            <h4>Use Ajax to fetch the last <input type="number" name="first_name" id="ajax_first_five"> records</h4>
+        </form>
+        <div id="placeholder">HOLD</div>
+
+        <div id="left_hold">
+            <form action="/ajax_search/filter" method="post" id="all_filter">
+                {% csrf_token %}
+                <h4>Search Users</h4><br>
+                <input type="text" name="first_name" id="user_first_name"><br>
+                <input type="checkbox" name="gender" id="user_gender" value="male">
+                <h4>Male</h4><br>
+                <input type="checkbox" name="gender" id="user_gender" value="female">
+                <h4>Female</h4><br>
+                <h4>Sports</h4><br>
+                <input type="checkbox" name="sport" id="user_sport" value="Baseball">
+                <h4>Baseball</h4><br>
+                <input type="checkbox" name="sport" id="user_sport" value="Football">
+                <h4>Football</h4><br>
+                <input type="checkbox" name="sport" id="user_sport" value="Soccer">
+                <h4>Soccer</h4><br>
+                <input type="checkbox" name="sport" id="user_sport" value="Hockey">
+                <h4>Hockey</h4>
+            </form>
+        </div>
+
+        <div id="hold_allusers">
+            {% for user in all_users %}
+                <div id="boxs">
+                    {{user.first_name}}
+                    {{user.last_name}}
+                    {{user.gender}}
+                    {{user.sport}}
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+</body>
+</html>

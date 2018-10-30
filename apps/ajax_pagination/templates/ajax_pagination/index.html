@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Ajax Pagination</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <script>
+
+        $(document).ready(function(){
+
+                $("#ajax_first_name").keyup(function(){
+                $.ajax({
+                    url: '/ajax_pagination/look',
+                    method: 'post',
+                    data: $(this).parent().serialize(),
+                    success: function(serverResponse){
+                        $("table").html(serverResponse)
+                    }
+                })
+            })
+
+            $("#ajax_date").change(function(){
+                $.ajax({
+                    url: '/ajax_pagination/look',
+                    method: 'post',
+                    data: $(this).parent().serialize(),
+                    success: function(serverResponse){
+                        $("table").html(serverResponse)
+                    }
+                })
+            })
+
+            $('#ajax_end_date').change(function(){
+                $.ajax({
+                    url: '/ajax_pagination/look',
+                    method: 'post',
+                    data: $(this).parent().serialize(),
+                    success: function(serverResponse){
+                        $("table").html(serverResponse)
+                    }
+                })
+            })
+
+        });
+
+    </script>
+
+    <style>
+        body {
+            padding-top: 100px;
+        }
+        div#conatiner {
+            width: 970px;
+            margin: 0 auto;
+        }
+        form {
+            display: table;
+            margin: 20px auto;
+        }
+        table {
+            border-collapse: collapse;
+            margin: 0 auto;
+        }
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+
+    </style>
+
+</head>
+<body>
+    <div id="container">
+            <form action="/ajax_pagination/look" method="post">
+                {% csrf_token %}
+                Name: <input type="text" name="first_name_starts_with" id="ajax_first_name">
+                From: <input type="date" name="created_at_starts_with" id="ajax_date">
+                To: <input type="date" name="created_at_ends_with" id="ajax_end_date">
+            </form>
+        <table>
+                <tr>
+                    <th>id</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Registerd @</th>
+                    <th>Email</th>
+                </tr>
+                <tr>
+                    <td>{{user.id}}</td>
+                    <td>{{user.first_name}}</td>
+                    <td>{{user.last_name}}</td>
+                    <td>{{user.created_at}}</td>
+                    <td>{{user.email}}</td>
+                </tr>
+            </table>
+    </div>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Ajax Search</title>
+</head>
+<body>
+    <table>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Gender</th>
+            <th>Sport</th>
+            <th>Image: URL</th>
+        </tr>
+        {% for user in users %}
+            <tr>
+                <td>{{user.first_name}}</td>
+                <td>{{user.last_name}}</td>
+                <td>{{user.gender}}</td>
+                <td>{{user.sport}}</td>
+                <td>{{user.image}}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

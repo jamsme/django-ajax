@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Ajax Demo</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+    <h3>Demo 1</h3>
+    <button id="button_json">Fetch HttpResponse from ajax_demo/all.jason</button>
+    <button id="button_html">Fetch HttpResponse from ajax_demo/all.html</button>
+
+    <div style="margin-top: 50px; border:1px solid silver; padding: 10px; width: 700px;" id="placeholder1">Placeholder for Ajax content</div>
+
+<script>
+
+    $('#button_json').click(function(){
+        console.log('button_json is clicked')
+        $.ajax({
+            url: '/ajax_demo/all.json',
+            success: function(serverResponse) {
+                console.log('success. serverResponse:', serverResponse)
+                $("#placeholder1").html(JSON.stringify(serverResponse))
+            }
+        })
+    });
+
+    $('#button_html').click(function(){
+        console.log('button is clicked')
+        $.ajax({
+            url: '/ajax_demo/all.html',
+            success: function(serverResponse) {
+                console.log('success. serverResponse:', serverResponse)
+                $("#placeholder1").html(serverResponse)
+            }
+        })
+    });
+
+</script>
+
+<h3>Demo 2 - Ajax Form</h3>
+<form action="/ajax_demo/find" method="post">
+    {% csrf_token %}
+    Find all users whose first name starts with
+    <input type="text" name="first_name_starts_with" id="ajax_first_name">
+</form>
+
+<div id="placeholder2">Placeholder2</div>
+
+<script>
+
+    $('#ajax_first_name').keyup(function(){
+        console.log('came here')
+        console.log("parent's serialize() returned", $(this).parent().serialize())
+        $.ajax({
+            url: '/ajax_demo/find',
+            method: 'post',
+            data: $(this).parent().serialize(),
+            success: function(serverResponse){
+                console.log('success', serverResponse)
+                $("#placeholder2").html(serverResponse)
+            }
+        })
+    })
+
+</script>
+
+<h3>Demo 3 - Ajax Form pt2</h3>
+<form action="/ajax_demo/create" method="post" class="ajax_form" id="create_user_ajax_form">
+    {% csrf_token %}
+    First Name: <input type="text" name="first_name">
+    Last Name: <input type="text" name="last_name">
+    Email Address: <input type="text" name="email_address">
+    Age: <input type="text" name="age">
+    <input type="submit" value="Submit">
+</form>
+
+<div id="placeholder3">Placeholder3</div>
+
+<script>
+
+    $('#create_user_ajax_form').submit(function(e){
+        e.preventDefault()
+        $.ajax({
+            url: $(this).attr('action'),
+            method: 'post',
+            data: $(this).serialize(),
+            success: function(serverResponse){
+                console.log('success', serverResponse)
+                $("#placeholder3").html(serverResponse)
+            }
+        })
+    })
+
+</script>
+
+</body>
+</html>
+
